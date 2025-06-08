@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buyer - Crop Settings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: auto;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Crop Settings</h1>
+
+  <table id="cropsTable">
+    <thead>
+      <tr>
+        <th>Crop</th>
+        <th>Units</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Records will be inserted here -->
+    </tbody>
+  </table>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const buyer = JSON.parse(localStorage.getItem("buyer"));
+
+      if (!buyer) {
+        alert("Buyer not found. Please login again.");
+        window.location.href = "/login";
+        return;
+      }
+
+      try {
+        // const res = await fetch(`/api/buyer/crop_settings?buyer_id=${buyer.buyer_id}`);
+        // if (!res.ok) throw new Error("Failed to fetch records");
+        const crop_records=JSON.parse(localStorage.getItem('crop_settings'));
+        // console.log(crop_records);
+        // const records = await res.json();
+        const tbody = document.querySelector("#cropsTable tbody");
+        tbody.innerHTML = "";
+        // console.log(records);
+        if (crop_records.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5">No purchase records found.</td></tr>`;
+          return;
+        }
+
+        crop_records.forEach(record => {
+          const row = document.createElement("tr");
+
+          const crop = record.crop_name;
+          const units = record.default_unit;
+
+          row.innerHTML = `
+            <td>${crop}</td>
+            <td>${units}</td>
+          `;
+
+          tbody.appendChild(row);
+        });
+
+      } catch (err) {
+        console.error("Error loading records:", err);
+        alert("Could not load purchase records. Please try again later.");
+      }
+    });
+  </script>
+</body>
+</html>

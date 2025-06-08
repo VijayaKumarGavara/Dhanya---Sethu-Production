@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login - Dhanya Sethu</title>
+    <link rel="shortcut icon" href="../assets/AGC.png" type="image/x-icon">
+</head>
+<body>
+    <div class="login-form">
+        <label for="user-role">Select your role:</label>
+        <select name="user-role" id="user-role">
+            <option value="farmer">Farmer</option>
+            <option value="buyer">Buyer</option>
+            <option value="worker" selected>Worker</option>
+        </select>
+    </div>
+
+    <form action="/api/farmer/login" method="post" id="farmer-login">
+        <div class="form-heading">Farmer Login Form</div>
+        <div class="form-item">
+            <label for="aadharno">Aadhar No:</label>
+            <input type="text" name="aadharno" id="aadharno" required value="351949632956"/>
+        </div>
+        <div class="form-item">
+            <label for="phoneno">Phone No:</label>
+            <input type="text" name="phoneno" id="phoneno" required value="7661848182"/>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+
+    <form action="/api/buyer/login" method="post" id="buyer-login">
+        <div class="form-heading">Buyer Login Form</div>
+        <div class="form-item">
+            <label for="buyer_phoneno">Phone No:</label>
+            <input type="text" name="buyer_phoneno" id="buyer_phoneno" required value="8247649582"/>
+        </div>
+        <div class="form-item">
+            <label for="buyer_otp">OTP:</label>
+            <input type="text" name="otp" id="buyer_otp" value="123456"/>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+
+    <form action="/api/worker/login" method="post" id="worker-login">
+        <div class="form-heading">Worker Login Form</div>
+        <div class="form-item">
+            <label for="buyer_phone_num">Buyer Phone No:</label>
+            <input type="text" name="buyer_phone_num" id="buyer_phone_num" required value="8978498701"/>
+        </div>
+        <div class="form-item">
+            <label for="worker_phone_num">Worker Phone No:</label>
+            <input type="text" name="worker_phone_num" id="worker_phone_num" required value="1457896320"/>
+        </div>
+        <div class="form-item">
+            <!-- Otp sent to buyer who connects with him -->
+            <label for="worker_buyer_otp">OTP:</label>  
+            <input type="text" name="worker_buyer_otp" id="worker_buyer_otp" value="123456" />
+        </div>
+        <button type="submit">Login</button>
+    </form>
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const forms = {
+                farmer: document.getElementById('farmer-login'),
+                buyer: document.getElementById('buyer-login'),
+                worker: document.getElementById('worker-login')
+            };
+
+            // Initially hide all forms
+            for (let key in forms) {
+                forms[key].style.display = 'none';
+            }
+
+            const roleSelect = document.getElementById('user-role');
+            const submitBtn = document.getElementById('role_selection_btn');
+
+            submitBtn.addEventListener('click', () => {
+                const selectedRole = roleSelect.value;
+
+                for (let role in forms) {
+                    forms[role].style.display = (role === selectedRole) ? 'block' : 'none';
+                }
+            });
+        });
+    </script> -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const forms = {
+            farmer: document.getElementById('farmer-login'),
+            buyer: document.getElementById('buyer-login'),
+            worker: document.getElementById('worker-login')
+            };
+
+            const roleSelect = document.getElementById('user-role');
+
+            // Hide all forms initially
+            for (let key in forms) {
+            forms[key].style.display = 'none';
+            }
+
+            // Show form immediately on role selection
+            roleSelect.addEventListener('change', () => {
+            const selectedRole = roleSelect.value;
+            for (let role in forms) {
+                forms[role].reset();
+                forms[role].style.display = (role === selectedRole) ? 'block' : 'none';
+            }
+            });
+
+            // Trigger change once to show default selected form
+            roleSelect.dispatchEvent(new Event('change'));
+
+            forms.farmer.addEventListener('submit',async(e)=>{
+            e.preventDefault();
+            const aadhar = document.getElementById('aadharno').value.trim();
+            const phone = document.getElementById('phoneno').value.trim();
+            try {
+                const response = await fetch('/api/farmer/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ aadhar, phone })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Save farmer details to localStorage
+                localStorage.setItem('farmer', JSON.stringify(data.farmer));
+                // Redirect to profile
+                window.location.href = '/farmer/dashboard';
+            } else {
+                alert(data.error || 'Login failed');
+            }
+            } catch (err) {
+                console.error('Error during login:', err);
+                alert('Something went wrong. Please try again.');
+            }
+        })
+
+            
+            forms.worker.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const buyer_phone_num = document.getElementById("buyer_phone_num").value;
+            const worker_phone_num = document.getElementById("worker_phone_num").value;
+            const worker_buyer_otp = document.getElementById("worker_buyer_otp").value;
+
+            try {
+                const res = await fetch("/api/worker/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    buyer_phone_num,
+                    worker_phone_num,
+                    worker_buyer_otp
+                })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                // alert("Login successful!");
+                // Save farmer details to localStorage
+                //localStorage.setItem('worker', JSON.stringify(data.worker));
+                localStorage.setItem("buyer_name", data.buyer_name);
+                localStorage.setItem("worker_name", data.worker_name);
+                localStorage.setItem("buyer_id", data.buyer_id);
+                localStorage.setItem("worker_id", data.worker_id);
+                localStorage.setItem("crop_settings", JSON.stringify(data.crop_settings));
+                // Redirect to worker dashboard
+                window.location.href = "/worker/buyings";
+                } else {
+                alert("Login failed: " + data.error);
+                }
+            } catch (error) {
+                console.error("Error logging in:", error);
+                alert("An error occurred. Try again later.");
+            }
+            });
+
+            forms.buyer.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const buyer_phone_num = document.getElementById("buyer_phoneno").value;
+            const buyer_otp = document.getElementById("buyer_otp").value;
+            // console.log(buyer_phone_num);
+            try {
+                const res = await fetch("/api/buyer/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    buyer_phone_num,
+                    buyer_otp
+                })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                // alert("Login successful!");
+                // Save farmer details to localStorage
+                //localStorage.setItem("buyer_name", data.buyer_name);
+                localStorage.setItem("buyer", JSON.stringify(data.buyer));
+                localStorage.setItem("crop_settings",JSON.stringify(data.crop_settings))
+                // Redirect to worker dashboard
+                window.location.href = "/buyer/dashboard";
+                } else {
+                alert("Login failed: " + data.error);
+                }
+            } catch (error) {
+                console.error("Error logging in:", error);
+                alert("An error occurred. Try again later.");
+            }
+            });
+        
+    }); // dom's
+            
+    </script>
+
+</body>
+</html>

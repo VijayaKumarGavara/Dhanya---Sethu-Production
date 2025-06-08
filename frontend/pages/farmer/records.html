@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Farmer Selling Records</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        .crop-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #bbb;
+            text-align: center;
+        }
+        th {
+            background-color: #f3f3f3;
+        }
+        .status-paid {
+            color: green;
+            font-weight: bold;
+        }
+        .status-partial {
+            color: orange;
+            font-weight: bold;
+        }
+        .status-pending {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Farmer Selling Records</h1>
+    <div id="records-container"></div>
+
+    <!-- <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const farmer = JSON.parse(localStorage.getItem('farmer'));
+        if (!farmer) {
+            alert('Please log in first.');
+            window.location.href = '/frontend/pages/login.html';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/farmer/selling-records?farmer_id=${farmer.farmer_id}`);
+            const result = await response.json();
+
+            if (!response.ok) {
+                alert(result.error || 'Failed to fetch records.');
+                return;
+            }
+
+            const data = result.records || result;
+
+            if (!Array.isArray(data)) {
+                alert('Invalid data format received from server.');
+                console.error('Expected array, got:', data);
+                return;
+            }
+
+            const container = document.getElementById('records-container');
+
+            if (data.length === 0) {
+                container.innerHTML = '<p>No selling records found.</p>';
+                return;
+            }
+
+            const groupedByCrop = {};
+
+            data.forEach(record => {
+                if (!groupedByCrop[record.crop_name]) {
+                    groupedByCrop[record.crop_name] = [];
+                }
+                groupedByCrop[record.crop_name].push(record);
+            });
+
+            for (const crop in groupedByCrop) {
+                const section = document.createElement('div');
+                section.className = 'crop-section';
+
+                const heading = document.createElement('h2');
+                heading.textContent = `Crop: ${crop}`;
+                section.appendChild(heading);
+
+                const table = document.createElement('table');
+                table.innerHTML = `
+                    <tr>
+                        <th>Buyer</th>
+                        <th>Qty</th>
+                        <th>Unit</th>
+                        <th>Rate/Unit</th>
+                        <th>Amount</th>
+                        <th>Payment Status</th>
+                    </tr>
+                `;
+
+                groupedByCrop[crop].forEach(row => {
+                    const tr = document.createElement('tr');
+                    const statusClass = row.payment_status === 'paid'
+                        ? 'status-paid'
+                        : row.payment_status === 'partial'
+                        ? 'status-partial'
+                        : 'status-pending';
+
+                    tr.innerHTML = `
+                        <td>${row.buyer_name}</td>
+                        <td>${row.qty}</td>
+                        <td>${row.unit}</td>
+                        <td>${row.cost_per_unit}</td>
+                        <td>${row.amount}</td>
+                        <td class="${statusClass}">${row.payment_status}</td>
+                    `;
+                    table.appendChild(tr);
+                });
+                
+                section.appendChild(table);
+                container.appendChild(section);
+            }
+
+        } catch (err) {
+            console.error('Error:', err);
+            alert('An error occurred. Please try again.');
+        }
+    });
+</script> -->
+    <script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const farmer = JSON.parse(localStorage.getItem('farmer'));
+    if (!farmer) {
+      alert('Please log in first.');
+      window.location.href = '/frontend/pages/login.html';
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/farmer/selling-records?farmer_id=${farmer.farmer_id}`);
+      const result = await response.json();
+
+      if (!response.ok) {
+        alert(result.error || 'Failed to fetch records.');
+        return;
+      }
+
+      const data = result.records || result;
+
+      if (!Array.isArray(data)) {
+        alert('Invalid data format received from server.');
+        console.error('Expected array, got:', data);
+        return;
+      }
+
+      const container = document.getElementById('records-container');
+
+      if (data.length === 0) {
+        container.innerHTML = '<p>No selling records found.</p>';
+        return;
+      }
+
+      // Group by crop
+      const groupedByCrop = {};
+      data.forEach(record => {
+        const key = `${record.crop_name}-${record.unit}`;
+        if (!groupedByCrop[key]) {
+          groupedByCrop[key] = {
+            crop_name: record.crop_name,
+            unit: record.unit,
+            records: []
+          };
+        }
+        groupedByCrop[key].records.push(record);
+      });
+
+      for (const key in groupedByCrop) {
+        const { crop_name, unit, records } = groupedByCrop[key];
+
+        // Calculate totals here
+        let total_qty = 0;
+        let total_amount = 0;
+        records.forEach(r => {
+          total_qty += r.qty;
+          total_amount += r.amount;
+        });
+
+        const section = document.createElement('div');
+        section.className = 'crop-section';
+
+        const heading = document.createElement('h2');
+        heading.textContent = `Crop: ${crop_name}`;
+        section.appendChild(heading);
+
+        const table = document.createElement('table');
+        table.innerHTML = `
+          <tr>
+            <th>Buyer</th>
+            <th>Qty</th>
+            <th>Unit</th>
+            <th>Rate/Unit</th>
+            <th>Amount</th>
+            <th>Payment Status</th>
+          </tr>
+        `;
+
+        records.forEach(row => {
+          const tr = document.createElement('tr');
+          const statusClass =
+            row.payment_status === 'paid' ? 'status-paid' :
+            row.payment_status === 'partial' ? 'status-partial' :
+            'status-pending';
+
+          tr.innerHTML = `
+            <td>${row.buyer_name}</td>
+            <td>${row.qty}</td>
+            <td>${row.unit}</td>
+            <td>${row.cost_per_unit}</td>
+            <td>${row.amount.toFixed(2)}</td>
+            <td class="${statusClass}">${row.payment_status}</td>
+          `;
+          table.appendChild(tr);
+        });
+
+        // Add total row
+        const totalRow = document.createElement('tr');
+        totalRow.className = 'total-row';
+        totalRow.innerHTML = `
+          <td><strong>Total</strong></td>
+          <td><strong>${total_qty.toFixed(2)}</strong></td>
+          <td>${unit}</td>
+          <td>-</td>
+          <td><strong>${total_amount.toFixed(2)}</strong></td>
+          <td>-</td>
+        `;
+        table.appendChild(totalRow);
+
+        section.appendChild(table);
+        container.appendChild(section);
+      }
+
+    } catch (err) {
+      console.error('Error:', err);
+      alert('An error occurred. Please try again.');
+    }
+  });
+</script>
+
+</body>
+</html>

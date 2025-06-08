@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Buyer Profile</title>
+</head>
+<body>
+  <h1>Buyer Profile</h1>
+  <div id="profile"></div>
+  <button onclick="logout()">Logout</button>
+
+
+  <script>
+    const buyer = JSON.parse(localStorage.getItem('buyer'));
+
+    if (!buyer) {
+      window.location.href = '/login'; // force login if not found
+    } else {
+      const profileDiv = document.getElementById('profile');
+      profileDiv.innerHTML = `
+        <p><strong>ID:</strong> ${buyer.buyer_id}</p>
+        <p><strong>Name:</strong> ${buyer.buyer_name}</p>
+        <p><strong>Phone:</strong> ${buyer.buyer_phone_num}</p>
+        <p><strong>Village:</strong> ${buyer.buyer_village}</p>
+      `;
+    }
+    function logout() {
+    localStorage.removeItem('buyer');
+    window.location.href = '/login';
+  }
+  </script>
+</body>
+</html>

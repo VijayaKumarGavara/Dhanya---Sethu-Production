@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registration - Dhanya Sethu</title>
+  <link rel="shortcut icon" href="../assets/AGC.png" type="image/x-icon">
+  <style>
+    .form-item { margin-bottom: 10px; }
+    form { margin: 20px 0; padding: 10px; border: 1px solid #ccc; max-width: 500px; }
+    .form-heading { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="registration-form">
+    <label for="user-role">Select your role:</label>
+    <select name="user-role" id="user-role">
+      <option value="farmer">Farmer</option>
+      <option value="buyer" selected>Buyer</option>
+      <option value="worker">Worker</option>
+    </select>
+  </div>
+
+  <!-- Farmer Registration Form -->
+  <form action="/api/farmer/register" method="post" id="farmer-registration" enctype="multipart/form-data">
+    <div class="form-heading">Farmer Registration Form</div>
+    <div class="form-item">
+      <label for="farmer_photo">Profile Picture</label>
+      <input type="file" accept="image/*" name="farmer_photo" id="farmer_photo" required />
+    </div>
+    <div class="form-item">
+      <label for="farmer_name">Name:</label>
+      <input type="text" name="name" id="farmer_name" required minlength="3" maxlength="50" value="Sowrothu Laxman Rao" />
+    </div>
+    <div class="form-item">
+      <label for="farmer_phone">Phone No:</label>
+      <input type="tel" name="phone" id="farmer_phone" required pattern="[0-9]{10}" maxlength="10" title="Enter 10-digit phone number" value="7032255949"/>
+    </div>
+    <div class="form-item">
+      <label for="farmer_aadhar">Aadhar No:</label>
+      <input type="text" name="aadhar" id="farmer_aadhar" required pattern="[0-9]{12}" maxlength="12" title="Enter 12-digit Aadhar number" value="123456789123"/>
+    </div>
+    <div class="form-item">
+      <label for="farmer_village">Village:</label>
+      <input type="text" name="village" id="farmer_village" required maxlength="100" value="Nadimivalasa"/>
+    </div>
+    <button type="submit">Register</button>
+  </form>
+
+  <!-- Buyer Registration Form -->
+  <form action="/api/buyer/register" method="post" id="buyer-registration" >
+    <div class="form-heading">Buyer Registration Form</div>
+    <div class="form-item">
+      <label for="buyer_name">Name:</label>
+      <input type="text" name="buyer_name" id="buyer_name" required minlength="3" maxlength="50"  value="Gudla Sathyanarayana"/>
+    </div>
+    <div class="form-item">
+      <label for="buyer_phone_num">Phone No:</label>
+      <input type="tel" name="buyer_phone_num" id="buyer_phone_num" required pattern="[0-9]{10}" maxlength="10" title="Enter 10-digit phone number" value="8247649582"/>
+    </div>
+    <div class="form-item">
+      <label for="buyer_village">Village:</label>
+      <input type="text" name="buyer_village" id="buyer_village" required maxlength="100" value="Nadimivalsasa"/>
+    </div>
+    <button type="submit">Register</button>
+  </form>
+
+  <!-- Worker Registration Form -->
+  <form action="/api/worker/register" method="post" id="worker-registration" >
+    <div class="form-heading">Worker Registration Form</div>
+    <div class="form-item">
+      <label for="worker_buyer_phone">Buyer Phone No:</label>
+      <input type="tel" name="buyer_phone_num" id="worker_buyer_phone" required pattern="[0-9]{10}" maxlength="10" title="Enter 10-digit phone number" value="8978498701"/>
+    </div>
+    <div class="form-item">
+      <label for="worker_name">Name:</label>
+      <input type="text" name="worker_name" id="worker_name" required minlength="3" maxlength="50" value="PQR XYZ"/>
+    </div>
+    <div class="form-item">
+      <label for="worker_phone">Worker Phone No:</label>
+      <input type="tel" name="worker_phone_num" id="worker_phone" required pattern="[0-9]{10}" maxlength="10" title="Enter 10-digit phone number" value="1457896320"/>
+    </div>
+    <div class="form-item">
+      <label for="worker_village">Village:</label>
+      <input type="text" name="village" id="worker_village" required maxlength="100" value="Nadimivalasa"/>
+    </div>
+    <div class="form-item">
+      <label for="buyer_otp">OTP:</label>
+      <input type="text" name="buyer_otp" id="buyer_otp" required pattern="\d{6}" maxlength="6" title="Enter the 6-digit OTP sent by buyer" value="123456"/>
+    </div>
+    <button type="submit">Register</button>
+  </form>
+
+  <!-- <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const forms = {
+        farmer: document.getElementById('farmer-registration'),
+        buyer: document.getElementById('buyer-registration'),
+        worker: document.getElementById('worker-registration')
+      };
+
+      for (let key in forms) {
+        forms[key].style.display = 'none';
+      }
+
+      const roleSelect = document.getElementById('user-role');
+      const submitBtn = document.getElementById('role_selection_btn');
+
+      submitBtn.addEventListener('click', () => {
+        const selectedRole = roleSelect.value;
+        for (let role in forms) {
+          forms[role].reset();
+          forms[role].style.display = (role === selectedRole) ? 'block' : 'none';
+        }
+      });
+    });
+  </script> -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const forms = {
+      farmer: document.getElementById('farmer-registration'),
+      buyer: document.getElementById('buyer-registration'),
+      worker: document.getElementById('worker-registration')
+    };
+
+    const roleSelect = document.getElementById('user-role');
+
+    // Hide all forms initially
+    for (let key in forms) {
+      forms[key].style.display = 'none';
+    }
+
+    // Show form immediately on role selection
+    roleSelect.addEventListener('change', () => {
+      const selectedRole = roleSelect.value;
+      for (let role in forms) {
+        forms[role].reset();
+        forms[role].style.display = (role === selectedRole) ? 'block' : 'none';
+      }
+    });
+
+    // Trigger change once to show default selected form
+    roleSelect.dispatchEvent(new Event('change'));
+
+    // Farmer form submission handling
+    forms.farmer.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const form = e.target;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('/api/farmer/register', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        const error = await response.json();
+        alert('Registration failed: ' + (error.message || 'Unknown error'));
+        return;
+      }
+
+      // Save farmer details to localStorage
+      localStorage.setItem('farmer', JSON.stringify(data.farmer));
+      // Redirect on success
+      window.location.href = '/farmer/dashboard';
+      
+    } catch (err) {
+      console.error('Error submitting form:', err);
+      alert('Something went wrong during registration.');
+    }
+    });
+    // Worker form submission handling
+    forms.worker.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new URLSearchParams(new FormData(form));
+
+      try {
+        const response = await fetch('/api/worker/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: formData
+        });
+
+        // Check if response is OK
+        if (!response.ok) {
+          const error = await response.json();
+          alert('Registration failed: ' + (error.message || 'Unknown error'));
+          return;
+        }
+
+        // ✅ Parse the response BEFORE accessing `data`
+        const data = await response.json();
+
+        // ✅ Now you can safely use `data`
+        localStorage.setItem("buyer_name", data.buyer_name);
+        localStorage.setItem("worker_name", data.worker_name);
+        localStorage.setItem("buyer_id", data.buyer_id);
+        localStorage.setItem("worker_id", data.worker_id);
+        localStorage.setItem("crop_settings", JSON.stringify(data.crop_settings));
+        window.location.href = '/worker/buyings';
+
+      } catch (err) {
+        console.error('Error submitting form:', err);
+        alert('Something went wrong during registration.');
+      }
+    });
+    // Buyer form submission handling
+    forms.buyer.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new URLSearchParams(new FormData(form));
+      // console.log(formData);
+      try {
+        const response = await fetch('/api/buyer/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: formData
+        });
+
+        // Check if response is OK
+        if (!response.ok) {
+          const error = await response.json();
+          alert('Registration failed: ' + (error.message || 'Unknown error'));
+          if (error.code === 'BUYER_EXISTS') {
+            window.location.href = '/login';
+          }
+
+          return;
+        }
+
+        // ✅ Parse the response BEFORE accessing `data`
+        const data = await response.json();
+
+        // ✅ Now you can safely use `data`
+        //localStorage.setItem("buyer_name", data.buyer_name);
+        localStorage.setItem("buyer", JSON.stringify(data.buyer));
+        localStorage.setItem("crop_settings",JSON.stringify(data.crop_settings))
+
+        window.location.href = '/buyer/dashboard';
+
+      } catch (err) {
+        console.error('Error submitting form:', err);
+        alert('Something went wrong during registration.');
+      }
+    });
+
+  });// dom's
+</script>
+
+</body>
+</html>

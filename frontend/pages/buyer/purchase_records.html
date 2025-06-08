@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buyer - Purchase Records</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: auto;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Purchase Records</h1>
+
+  <table id="recordsTable">
+    <thead>
+      <tr>
+        <th>Date of Entry</th>
+        <th>Farmer Name</th>
+        <th>Crop</th>
+        <th>Quantity</th>
+        <th>Cost per Unit</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Records will be inserted here -->
+    </tbody>
+  </table>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const buyer = JSON.parse(localStorage.getItem("buyer"));
+
+      if (!buyer) {
+        alert("Buyer not found. Please login again.");
+        window.location.href = "/login";
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/buyer/records?buyer_id=${buyer.buyer_id}`);
+        if (!res.ok) throw new Error("Failed to fetch records");
+
+        const records = await res.json();
+        const tbody = document.querySelector("#recordsTable tbody");
+        tbody.innerHTML = "";
+        console.log(records);
+        if (records.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5">No purchase records found.</td></tr>`;
+          return;
+        }
+
+        records.forEach(record => {
+          const row = document.createElement("tr");
+
+          const date = new Date(record.date).toLocaleDateString();
+          const farmer=record.farmer_name;
+          const crop = record.crop_name;
+          const quantity = record.quantity ?? "N/A";
+          const cost = record.cost_per_unit ?? "N/A";
+          const amount = record.amount;
+
+          row.innerHTML = `
+            <td>${date}</td>
+            <td>${farmer}</td>
+            <td>${crop}</td>
+            <td>${quantity}</td>
+            <td>${cost}</td>
+            <td>${amount}</td>
+          `;
+
+          tbody.appendChild(row);
+        });
+
+      } catch (err) {
+        console.error("Error loading records:", err);
+        alert("Could not load purchase records. Please try again later.");
+      }
+    });
+  </script>
+</body>
+</html>

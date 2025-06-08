@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Finalize Procurements</title>
+</head>
+<body>
+  <h2>💰 Finalize Procurements</h2>
+  <table border="1" cellspacing="0" cellpadding="8" style="width: 100%;">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Farmer</th>
+        <th>Crop</th>
+        <th>Quantity</th>
+        <th>Cost / Unit</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="procurement-rows">
+      <!-- JS will populate rows -->
+    </tbody>
+  </table>
+
+  <script>
+    async function fetchProcurements() {
+      const buyer = JSON.parse(localStorage.getItem("buyer"));
+      const response = await fetch(`/api/procurements/unpriced/${buyer.buyer_id}`);
+      const data = await response.json();
+
+      const tbody = document.getElementById("procurement-rows");
+      tbody.innerHTML = "";
+
+      data.forEach(entry => {
+        const tr = document.createElement("tr");
+
+        const quantity = `${entry.quantity} ${entry.unit_type}`;
+        const inputId = `cost-${entry.request_id}`;
+
+        tr.innerHTML = `
+          <td>${new Date(entry.created_at).toLocaleDateString()}</td>
+          <td>${entry.farmer_name}</td>
+          <td>${entry.crop_name}</td>
+          <td>${quantity}</td>
+          <td>
+            <input type="number" 
+                   min="0" 
+                   step="1" 
+                   placeholder="Cost" 
+                   id="${inputId}" 
+                   data-unit="${entry.unit_type}" 
+                   data-qty="${entry.quantity}" />
+          </td>
+          <td>
+            <button onclick="submitCost(${entry.request_id})">Add</button>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function submitCost(requestId) {
+      const input = document.getElementById(`cost-${requestId}`);
+      const cost = parseInt(input.value);
+      const unit_type = input.dataset.unit;
+      const quantity = parseFloat(input.dataset.qty);
+
+      if (!cost || cost <= 0) {
+        alert("Please enter a valid cost");
+        return;
+      }
+
+      const payload = {
+        request_id: requestId,
+        cost_per_unit: cost,
+        unit_type,
+        quantity
+      };
+
+      try {
+        const res = await fetch("/api/procurements/add-cost", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          alert("Cost added successfully!");
+          fetchProcurements();
+        } else {
+          alert("Error: " + (result.error || "Unknown error"));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Server error occurred.");
+      }
+    }
+
+    // Initial load
+    fetchProcurements();
+  </script>
+</body>
+</html>

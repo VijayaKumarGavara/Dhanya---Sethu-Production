@@ -1,0 +1,254 @@
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buyings Page</title>
+</head>
+<body>
+  <h1>Buyings Page</h1>
+  <h2>Buyer Name: <span id="buyer-name"></span></h2>
+  <h2>Worker Name: <span id="worker-name"></span></h2>
+
+  <div class="form-item">
+    <label for="farmer_aadhar">Aadhar No:</label>
+    <input type="text" name="farmer_aadhar" id="farmer_aadhar" required pattern="[0-9]{12}" maxlength="12" title="Enter 12-digit Aadhar number" />
+  </div>
+
+  <button onclick="getFarmerDetails()">Get Farmer Details</button>
+  <div id="farmer_details" style="margin-top: 20px;"></div>
+
+  <button onclick="logout()">Logout</button>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const buyerName = localStorage.getItem("buyer_name");
+      const workerName = localStorage.getItem("worker_name");
+      document.getElementById("buyer-name").textContent = buyerName || "Unknown Buyer";
+      document.getElementById("worker-name").textContent = workerName || "Unknown Worker";
+    });
+
+    async function getFarmerDetails() {
+      const aadhar = document.getElementById("farmer_aadhar").value.trim();
+      const outputDiv = document.getElementById("farmer_details");
+
+      if (!/^\d{12}$/.test(aadhar)) {
+        outputDiv.innerHTML = "<p style='color:red;'>Please enter a valid 12-digit Aadhar number.</p>";
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/farmer/by-aadhar/${aadhar}`);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          outputDiv.innerHTML = `<p style="color: red;">${data.error || 'Farmer not found'}</p>`;
+          return;
+        }
+        const farmer = Array.isArray(data) ? data[0] : data;
+        // console.log(farmer);
+        // Display farmer info
+        outputDiv.innerHTML = `
+          <h3>Farmer Details:</h3>
+          <p><strong>Name:</strong> ${farmer.farmer_name}</p>
+          <p><strong>Phone:</strong> ${farmer.farmer_phone_num}</p>
+          <p><strong>Village:</strong> ${farmer.farmer_village}</p>
+          <img src="/uploads/farmers/${farmer.photo}" alt="Farmer Photo" width="150"/>
+        `;
+
+      } catch (err) {
+        console.error("Error fetching farmer:", err);
+        outputDiv.innerHTML = "<p style='color:red;'>Something went wrong. Try again.</p>";
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "/login";
+    }
+  </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buyings Page</title>
+</head>
+<body>
+  <h1>Buyings Page</h1>
+  <h2>Buyer Name: <span id="buyer-name"></span></h2>
+  <h2>Worker Name: <span id="worker-name"></span></h2>
+
+    <div class="form-item">
+        <label for="farmer_aadhar">Aadhar No:</label>
+        <input type="text" name="farmer_aadhar" id="farmer_aadhar" required pattern="[0-9]{12}" maxlength="12" title="Enter 12-digit Aadhar number" />
+    </div>
+    <button onclick="getFarmerDetails()">Get Farmer Details</button>
+
+    <div id="farmer_details" style="margin-top: 20px;"></div>
+    <button id="confirm_farmer_btn" onclick="confirmFarmer()" style="display: none; margin-top: 10px;">
+        ✅ Confirm Farmer
+    </button>
+
+    <div id="procurement_form" style="display:none; margin-top: 20px;">
+        <h3>Procurement Details</h3>
+
+        <label for="crop">Select Crop:</label>
+        <select id="crop" name="crop" required>
+            <option value="" disabled selected>Select a crop</option>
+            <option value="Mokka Jonna">🌽 Mokka Jonna</option>
+            <option value="Paddy">🌾 Paddy</option>
+            <option value="Mirchi">🌶️ Mirchi</option>
+            <option value="Ground Nut">🥜 Ground Nut</option>
+        </select>
+
+        <br><br>
+
+        <label for="quantity">Net Quantity:</label>
+        <input type="number" id="quantity" name="quantity" step="0.01" placeholder="e.g., 120.50" required />
+
+        <br><br>
+
+        <button onclick="submitProcurement()">Submit Procurement</button>
+    </div>
+
+  <button onclick="logout()">Logout</button>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const buyerName = localStorage.getItem("buyer_name");
+      const workerName = localStorage.getItem("worker_name");
+      document.getElementById("buyer-name").textContent = buyerName || "Unknown Buyer";
+      document.getElementById("worker-name").textContent = workerName || "Unknown Worker";
+    });
+
+    async function getFarmerDetails() {
+      const aadhar = document.getElementById("farmer_aadhar").value.trim();
+      const outputDiv = document.getElementById("farmer_details");
+
+      if (!/^\d{12}$/.test(aadhar)) {
+        outputDiv.innerHTML = "<p style='color:red;'>Please enter a valid 12-digit Aadhar number.</p>";
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/farmer/by-aadhar/${aadhar}`);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          outputDiv.innerHTML = `<p style="color: red;">${data.error || 'Farmer not found'}</p>`;
+          return;
+        }
+        const farmer = Array.isArray(data) ? data[0] : data;
+        // console.log(farmer);
+        // Display farmer info
+        outputDiv.innerHTML = `
+          <h3>Farmer Details:</h3>
+          <p><strong>Name:</strong> ${farmer.farmer_name}</p>
+          <p><strong>Phone:</strong> ${farmer.farmer_phone_num}</p>
+          <p><strong>Village:</strong> ${farmer.farmer_village}</p>
+          <img src="/uploads/farmers/${farmer.photo}" alt="Farmer Photo" width="150"/>
+        `;
+        // Show confirm button only after successful fetch
+        document.getElementById("confirm_farmer_btn").dataset.farmerId = farmer.farmer_id;
+        document.getElementById("confirm_farmer_btn").style.display = "inline-block";
+
+        
+      } catch (err) {
+        console.error("Error fetching farmer:", err);
+        outputDiv.innerHTML = "<p style='color:red;'>Something went wrong. Try again.</p>";
+      }
+    }
+    function confirmFarmer() {
+      const farmerId = document.getElementById("confirm_farmer_btn").dataset.farmerId;
+      if (farmerId) {
+          localStorage.setItem("farmer_id", farmerId);
+      } else {
+          console.warn("Farmer ID not found in dataset.");
+      }
+      document.getElementById("procurement_form").style.display = "block";
+      document.getElementById("confirm_farmer_btn").style.display = "none";
+    }
+    const cropSettings = JSON.parse(localStorage.getItem("crop_settings")) || [];
+
+    const cropSelect = document.getElementById("crop");
+    cropSelect.innerHTML = '<option disabled selected>Select a crop</option>';
+
+    cropSettings.forEach(setting => {
+      const option = document.createElement("option");
+      option.value = setting.crop_id;
+      option.textContent = `${setting.crop_name} (${setting.default_unit})`;
+      option.dataset.unit = setting.default_unit;
+      cropSelect.appendChild(option);
+    });
+    async function submitProcurement() {
+      const cropSelect = document.getElementById("crop");
+      const crop_id = cropSelect.value;
+      const crop_name = cropSelect.options[cropSelect.selectedIndex].text.split(" (")[0];
+      const default_unit = cropSelect.options[cropSelect.selectedIndex].dataset.unit;
+      const quantity = parseFloat(document.getElementById("quantity").value);
+
+      const buyer_id = localStorage.getItem("buyer_id");
+      const worker_id = localStorage.getItem("worker_id");
+      const farmer_id = localStorage.getItem("farmer_id");
+
+      if (!buyer_id || !worker_id || !farmer_id || !crop_id || !quantity) {
+        alert("Missing required fields. Please ensure all data is filled.");
+        return;
+      }
+
+      const payload = {
+        buyer_id,
+        worker_id,
+        farmer_id,
+        crop_id,
+        crop_name,
+        quantity,
+        unit: default_unit
+      };
+
+      try {
+        const response = await fetch("/api/procurements", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert("Procurement submitted successfully!");
+          // Clear form
+          //document.getElementById("procurement_form").reset();
+          // Reset form and UI
+          // document.getElementById("procurement_form").reset();
+          document.getElementById("farmer_details").innerHTML = "";
+          document.getElementById("procurement_form").style.display = "none";
+          document.getElementById("confirm_farmer_btn").style.display = "none";
+          document.getElementById("farmer_aadhar").value = "";
+          localStorage.removeItem("farmer_id");
+        } else {
+          alert("Failed to submit: " + result.error);
+        }
+      } catch (err) {
+        console.error("Submit error:", err);
+        alert("An error occurred while submitting procurement.");
+      }
+    }
+
+
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "/login";
+    }
+  </script>
+</body>
+</html>
