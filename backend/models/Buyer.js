@@ -18,6 +18,28 @@ exports.registerBuyer = async (buyer) => {
   }
 };
 
+exports.setCropSettings = async (buyer_id) => {
+  const q = `
+    INSERT INTO buyer_crop_settings (buyer_id, crop_id, crop_name, default_unit)
+    VALUES 
+      (?, 10, 'Mokka Jonna', 'quintal'),
+      (?, 11, 'Paddy', 'quintal'),
+      (?, 12, 'Mirchi', 'kg'),
+      (?, 14, 'Ground Nut', 'quintal'),
+      (?, 15, 'Pesalu', 'quintal'),
+      (?, 16, 'Minimulu', 'quintal'),
+      (?, 17, 'Vulavulu', 'quintal'),
+      (?, 18, 'Solu', 'quintal')
+  `;
+
+  try {
+    await db.query(q, Array(8).fill(buyer_id)); // [buyer_id, buyer_id, ..., 8 times]
+  } catch (err) {
+    console.error('DB Error in setCropSettings:', err);
+    throw err;
+  }
+};
+
 
 exports.getBuyerByPhone = async (phone) => {
   const q = "SELECT * FROM buyers WHERE buyer_phone_num = ?";
@@ -103,3 +125,26 @@ exports.getPurchaseRecords = async (buyer_id) => {
 //     throw err;
 //   }
 // };
+
+exports.getTransactions = async (buyer_id) => {
+  const q = `
+    SELECT 
+      f.farmer_name,
+      c.crop_name,
+      p.amount,
+      p.paid_at
+    FROM payment_logs p
+    JOIN farmers f ON p.farmer_id = f.farmer_id
+    JOIN crops c ON p.crop_id = c.crop_id
+    WHERE p.buyer_id = ?
+    ORDER BY p.paid_at DESC
+  `;
+  try {
+    const [rows] = await db.query(q, [buyer_id]);
+    return rows;
+  } catch (err) {
+    console.error('DB Error in getTransactions:', err);
+    throw err;
+  }
+};
+

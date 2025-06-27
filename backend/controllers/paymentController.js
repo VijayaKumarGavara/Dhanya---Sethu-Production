@@ -1,97 +1,50 @@
 const Payment = require('../models/Payment');
-const Purchase = require('../models/Purchase');
+const Buyer = require('../models/Buyer');
+// Get dues for the logged-in buyer
+exports.getFarmerCropDues = async (req, res) => {
+  const { buyer_id } = req.params;
 
-// Make a payment (update purchase and create a payment record)
-exports.makePayment = async (req, res) => {
+  if (!buyer_id) {
+    return res.status(400).json({ error: 'Buyer ID is required' });
+  }
+
   try {
-    const { buyerId, farmerId, amount } = req.body;
-
-    // Update the corresponding purchase record
-    const purchase = await Purchase.findOne({ farmerId, buyerId });
-
-    if (!purchase) {
-      return res.status(404).json({ error: 'Purchase not found for this buyer and farmer' });
-    }
-
-    purchase.paymentDone += amount;
-    purchase.balanceAmount = purchase.totalAmount - purchase.paymentDone;
-    purchase.updatedAt = new Date();
-    await purchase.save();
-
-    // Create a new payment record
-    const payment = new Payment({
-      buyerId,
-      farmerId,
-      amount,
-      status: 'Pending', // initially pending
-    });
-
-    await payment.save();
-
-    res.status(200).json({
-      message: 'Payment recorded successfully',
-      purchase,
-      payment,
-    });
+    const dues = await Payment.getFarmerCropDues(buyer_id);
+    res.json(dues);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("❌ Error fetching dues:", err);
+    res.status(500).json({ error: 'Failed to fetch dues' });
   }
 };
 
-// Get all pending payments
-exports.getPendingPayments = async (req, res) => {
-  try {
-    const payments = await Payment.find({ status: 'Pending' })
-      .populate('buyerId', 'name')
-      .populate('farmerId', 'name mobile village');
+// Make a payment
+exports.makePayment = async (req, res) => {
+  const { buyer_id, farmer_id, crop_id, amount } = req.body;
+  // console.log(req.body);
+  if (!buyer_id || !farmer_id || !crop_id || !amount) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
 
-    res.json(payments);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  try {
+    await Payment.makePayment({ buyer_id, farmer_id, crop_id, amount });
+    res.json({success:true, message: 'Payment successful' });
+  } catch (err) {
+    console.error("❌ Error making payment:", err);
+    res.status(500).json({ error: 'Failed to process payment' });
   }
 };
 
-// Get payments by Buyer ID
-exports.getPaymentsByBuyer = async (req, res) => {
-  try {
-    const { buyerId } = req.params;
-    const payments = await Payment.find({ buyerId })
-      .populate('farmerId', 'name mobile village');
-
-    res.json(payments);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+exports.getBuyerTransactions = async (req, res) => {
+  const { buyer_id } = req.params;
+  if (!buyer_id) {
+    return res.status(400).json({ error: "Missing buyer_id" });
   }
-};
 
-// Get payments by Farmer ID
-exports.getPaymentsByFarmer = async (req, res) => {
   try {
-    const { farmerId } = req.params;
-    const payments = await Payment.find({ farmerId })
-      .populate('buyerId', 'name');
-
-    res.json(payments);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Mark a payment as Paid
-exports.markPaymentAsPaid = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const payment = await Payment.findByIdAndUpdate(
-      id,
-      {
-        status: 'Paid',
-        paymentDate: new Date()
-      },
-      { new: true }
-    );
-
-    res.json({ message: 'Payment marked as paid', payment });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const transactions = await Buyer.getTransactions(buyer_id);
+    res.json(transactions);
+  } catch (err) {
+    console.error("❌ Error fetching transactions:", err);
+    res.status(500).json({ error: "Failed to fetch transactions" });
   }
 };

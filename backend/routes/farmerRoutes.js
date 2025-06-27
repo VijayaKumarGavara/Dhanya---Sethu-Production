@@ -20,20 +20,21 @@ router.post('/register', upload.single('farmer_photo'), farmerController.registe
 router.post('/login', farmerController.loginFarmer);
 // Selling records route (NEW)
 router.get('/selling-records', farmerController.getSellingRecords);
+router.get('/selling-records-new', farmerController.getSellingRecordsNew);
 
 // GET farmer by Aadhar number
-router.get('/by-aadhar/:aadhar', async (req, res) => {
-  const { aadhar } = req.params;
-  try {
-    const farmer = await Farmer.getFarmerByAadhar(aadhar);
-    if (!farmer) {
-      return res.status(404).json({ error: 'Farmer not found' });
-    }
-    res.json(farmer);
-  } catch (err) {
-    console.error('Error fetching farmer by Aadhar:', err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+// router.get('/by-aadhar/:aadhar', async (req, res) => {
+//   const { aadhar } = req.params;
+//   try {
+//     const farmer = await Farmer.getFarmerByAadhar(aadhar);
+//     if (!farmer) {
+//       return res.status(404).json({ error: 'Farmer not found' });
+//     }
+//     res.json(farmer);
+//   } catch (err) {
+//     console.error('Error fetching farmer by Aadhar:', err);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// });
 
 module.exports = router;

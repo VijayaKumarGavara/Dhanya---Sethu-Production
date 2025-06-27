@@ -31,7 +31,13 @@
 
       const tbody = document.getElementById("procurement-rows");
       tbody.innerHTML = "";
-
+      function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // month is 0-indexed
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+        }
       data.forEach(entry => {
         const tr = document.createElement("tr");
 
@@ -39,7 +45,7 @@
         const inputId = `cost-${entry.request_id}`;
 
         tr.innerHTML = `
-          <td>${new Date(entry.created_at).toLocaleDateString()}</td>
+          <td>${entry.created_at}</td>
           <td>${entry.farmer_name}</td>
           <td>${entry.crop_name}</td>
           <td>${quantity}</td>
@@ -80,7 +86,7 @@
       };
 
       try {
-        const res = await fetch("/api/procurements/add-cost", {
+        const res = await fetch("/api/procurements/add-cost-new", { // changed it to the new
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
