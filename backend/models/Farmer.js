@@ -154,3 +154,51 @@ exports.getSellingRecordsByFarmer = async (farmer_id) => {
   const [results] = await db.query(sql, [farmer_id]);
   return results;
 };
+
+
+exports.getSellingRecordsByFarmerNew = async (farmer_id) => {
+  const sql = `
+    SELECT
+      e.date,
+      e.entry_id,
+      c.crop_id,
+      c.crop_name,
+      b.buyer_id,
+      b.buyer_name,
+      bcs.default_unit AS unit,
+      
+      CASE bcs.default_unit
+        WHEN 'kg' THEN e.qty_in_kgs
+        WHEN 'quintal' THEN e.qty_in_quintals
+      END AS qty,
+
+      CASE bcs.default_unit
+        WHEN 'kg' THEN e.cost_per_kg
+        WHEN 'quintal' THEN e.cost_per_quintal
+      END AS cost_per_unit,
+
+      CASE bcs.default_unit
+        WHEN 'kg' THEN e.qty_in_kgs * e.cost_per_kg
+        WHEN 'quintal' THEN e.qty_in_quintals * e.cost_per_quintal
+      END AS amount,
+      fcd.qty_in_quintals,
+      fcd.qty_in_kgs,
+      fcd.total_amount,
+      fcd.paid_amount,
+      (fcd.total_amount - fcd.paid_amount) AS amount_due,
+      fcd.payment_status AS payment_status
+
+    FROM entries e
+    JOIN crops c ON c.crop_id = e.crop_id
+    JOIN buyers b ON b.buyer_id = e.buyer_id
+    JOIN buyer_crop_settings bcs ON bcs.buyer_id = e.buyer_id AND bcs.crop_id = e.crop_id
+    LEFT JOIN farmer_crop_dues fcd
+      ON fcd.farmer_id = e.farmer_id AND fcd.crop_id = e.crop_id AND fcd.buyer_id = e.buyer_id
+
+    WHERE e.farmer_id = ?
+    ORDER BY c.crop_name, b.buyer_name, e.entry_id
+  `;
+
+  const [results] = await db.query(sql, [farmer_id]);
+  return results;
+};

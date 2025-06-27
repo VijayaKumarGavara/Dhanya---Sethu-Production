@@ -3,16 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buyer</title>
+    <title>Buyer - Dashboard</title>
+    <style>
+        li{
+            margin-top: 20px;
+            font-size: 30px;
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome To Buyer's Dashboard</h1>
     <h2 id="buyer-name"></h2>
     <li><a href="/buyer/profile">Profile</a></li>
-    <li><a href="/buyer/records">Records</a></li>
+    <li><a href="/buyer/crop_settings">Edit Crop Settings</a></li>
     <li><a href="/buyer/buyings">Buyings</a></li>
     <li><a href="/buyer/procurements">Procurements Requests</a></li>
-    <li><a href="/buyer/crop_settings">Edit Crop Settings</a></li>
+    <li><a href="/buyer/records">Records</a></li>
+    <li><a href="/buyer/payment_dues">Payments</a></li>
+    <li><a href="/buyer/transactions">Transactions</a></li>
     <script>
         const buyer = JSON.parse(localStorage.getItem('buyer'));
         document.getElementById("buyer-name").textContent = buyer.buyer_name || "Unknown Buyer";

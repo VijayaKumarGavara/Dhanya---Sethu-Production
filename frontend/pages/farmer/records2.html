@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Farmer Selling Records</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    .crop-section {
+      margin-bottom: 40px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    .buyer-section {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px dashed #aaa;
+      border-radius: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 8px 12px;
+      border: 1px solid #bbb;
+      text-align: center;
+    }
+    th {
+      background-color: #f3f3f3;
+    }
+    .status-paid {
+      color: green;
+      font-weight: bold;
+    }
+    .status-partial {
+      color: orange;
+      font-weight: bold;
+    }
+    .status-pending {
+      color: red;
+      font-weight: bold;
+    }
+    .summary {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Farmer Selling Records</h1>
+  <div id="records-container"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const farmer = JSON.parse(localStorage.getItem('farmer'));
+      if (!farmer) {
+        alert('Please log in first.');
+        window.location.href = '/frontend/pages/login.html';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/farmer/selling-records-new?farmer_id=${farmer.farmer_id}`);
+        const result = await response.json();
+
+        if (!response.ok) {
+          alert(result.error || 'Failed to fetch records.');
+          return;
+        }
+
+        const data = result.records || result;
+
+        if (!Array.isArray(data)) {
+          alert('Invalid data format received from server.');
+          console.error('Expected array, got:', data);
+          return;
+        }
+        // console.log(data);
+        const container = document.getElementById('records-container');
+
+        if (data.length === 0) {
+          container.innerHTML = '<p>No selling records found.</p>';
+          return;
+        }
+
+        // Group by crop → then by buyer
+        const grouped = {};
+        data.forEach(record => {
+          const cropKey = record.crop_name;
+          if (!grouped[cropKey]) {
+            grouped[cropKey] = {};
+          }
+
+          const buyerKey = `${record.buyer_name}-${record.buyer_id}`;
+          if (!grouped[cropKey][buyerKey]) {
+            grouped[cropKey][buyerKey] = {
+              buyer_name: record.buyer_name,
+              unit: record.unit,
+              entries: [],
+              qty_in_quintals:record.qty_in_quintals,
+              qty_in_kgs:record.qty_in_kgs,
+              total_amount: record.total_amount,
+              amount_paid: record.paid_amount,
+              amount_due: record.amount_due,
+              payment_status: record.payment_status
+            };
+            // console.log(qty_in_quintals,qty_in_kgs);
+          }
+
+          grouped[cropKey][buyerKey].entries.push(record);
+        });
+
+        // Render to DOM
+        for (const cropName in grouped) {
+          const cropSection = document.createElement('div');
+          cropSection.className = 'crop-section';
+
+          const cropHeading = document.createElement('h2');
+          cropHeading.textContent = `Crop: ${cropName}`;
+          cropSection.appendChild(cropHeading);
+
+          const buyers = grouped[cropName];
+          for (const buyerKey in buyers) {
+            const { buyer_name, unit, entries,qty_in_kgs,qty_in_quintals, total_amount, amount_paid, amount_due, payment_status } = buyers[buyerKey];
+
+            const buyerDiv = document.createElement('div');
+            buyerDiv.className = 'buyer-section';
+
+            const buyerHeading = document.createElement('h3');
+            buyerHeading.textContent = `Buyer: ${buyer_name}`;
+            buyerDiv.appendChild(buyerHeading);
+
+            const table = document.createElement('table');
+            table.innerHTML = `
+              <tr>
+                <th>Date</th>
+                <th>Quantity</th>
+                <th>Rate/Unit</th>
+                <th>Amount</th>
+              </tr>
+            `;
+            function formatDate(dateStr) {
+              const date = new Date(dateStr);
+              const day = String(date.getDate()).padStart(2, '0');
+              const month = String(date.getMonth() + 1).padStart(2, '0'); // month is 0-indexed
+              const year = date.getFullYear();
+              return `${day}/${month}/${year}`;
+            }
+            entries.forEach(row => {
+              // console.log(row.date);
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>${formatDate(row.date)}</td>
+                <td>${row.qty}${' '}${row.unit}</td>
+                <td>${row.cost_per_unit}</td>
+                <td>${row.amount.toFixed(2)}</td>
+              `;
+              table.appendChild(tr);
+            });
+
+            const statusClass = payment_status === 'paid' ? 'status-paid'
+              : payment_status === 'partial' ? 'status-partial' : 'status-pending';
+
+            const summary = document.createElement('div');
+            summary.className = 'summary';
+            if(qty_in_quintals!=="0.00"){
+              summary.innerHTML = `
+                  <p>Total Quantity: ${Number(qty_in_quintals || 0).toFixed(2)} ${unit}</p>
+                  <p>Total Amount: ₹${Number(total_amount || 0).toFixed(2)}</p>
+                  <p>Amount Paid: ₹${Number(amount_paid || 0).toFixed(2)}</p>
+                  <p>Due Amount: ₹${Number(amount_due || 0).toFixed(2)}</p>
+
+                  <p class="${statusClass}">Payment Status: ${payment_status.charAt(0).toUpperCase() + payment_status.slice(1)}</p>
+              `;
+            }else{
+              summary.innerHTML = `
+                <p>Total Quantity: ${Number(qty_in_kgs || 0).toFixed(2)} ${unit}</p>
+                <p>Total Amount: ₹${Number(total_amount || 0).toFixed(2)}</p>
+                <p>Amount Paid: ₹${Number(amount_paid || 0).toFixed(2)}</p>
+                <p>Due Amount: ₹${Number(amount_due || 0).toFixed(2)}</p>
+
+                <p class="${statusClass}">Payment Status: ${payment_status.charAt(0).toUpperCase() + payment_status.slice(1)}</p>
+            `;
+            }
+            buyerDiv.appendChild(table);
+            buyerDiv.appendChild(summary);
+            cropSection.appendChild(buyerDiv);
+          }
+
+          container.appendChild(cropSection);
+        }
+
+      } catch (err) {
+        console.error('Error:', err);
+        alert('An error occurred. Please try again.');
+      }
+    });
+  </script>
+</body>
+</html>

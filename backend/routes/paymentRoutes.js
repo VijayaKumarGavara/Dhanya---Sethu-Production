@@ -1,27 +1,13 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const paymentController = require("../controllers/paymentController");
 
-const {
-  makePayment,
-  getPendingPayments,
-  getPaymentsByBuyer,
-  getPaymentsByFarmer,
-  markPaymentAsPaid
-} = require('../controllers/paymentController');
+// Get farmer crop dues for a buyer
+router.get("/dues/:buyer_id", paymentController.getFarmerCropDues);
 
-// Record a new payment
-router.post('/pay', makePayment);
+// Make a payment
+router.post("/make-payment", paymentController.makePayment);
 
-// Get all pending payments
-router.get('/pending', getPendingPayments);
-
-// Get payments by buyer ID
-router.get('/buyer/:buyerId', getPaymentsByBuyer);
-
-// Get payments by farmer ID
-router.get('/farmer/:farmerId', getPaymentsByFarmer);
-
-// Mark a payment as paid
-router.put('/mark-paid/:id', markPaymentAsPaid);
-
+// ✅ New: Get transactions for a buyer
+router.get("/transactions/:buyer_id", paymentController.getBuyerTransactions);
 module.exports = router;

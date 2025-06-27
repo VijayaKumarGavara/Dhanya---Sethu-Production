@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farmer Crop Dues - Buyer Panel</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+</head>
+<body>
+  <div class="payment-container">
+    <div class="container">
+      <h1>Farmer Crop Dues</h1>
+
+      <!-- Filter Section -->
+      <div class="filters">
+        <input type="text" id="searchInput" placeholder="Search by Farmer Name or Aadhaar" />
+        <select id="cropFilter">
+          <option value="">All Crops</option>
+          <!-- Crops will be populated dynamically -->
+        </select>
+        <select id="statusFilter">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="partial">Partial</option>
+          <option value="paid">Paid</option>
+        </select>
+        <button id="applyFilters">Apply Filters</button>
+      </div>
+
+      <!-- Dues Table -->
+      <table id="payment_dues_table" border="1" >
+        <thead>
+          <tr>
+            <th>Farmer</th>
+            <th>Crop</th>
+            <th>Quantity</th>
+            <th>Total ₹</th>
+            <th>Paid ₹</th>
+            <th>Due ₹</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="duesTableBody">
+          <!-- Rows will be injected via JS -->
+        </tbody>
+      </table>
+    </div>
+
+      <!-- Payment Modal -->
+      <div id="paymentModal" class="modal hidden">
+          <div class="modal-content">
+              <h2>Make Payment</h2>
+              <form id="paymentForm">
+                  <p id="modalFarmer"></p>
+                  <p id="modalCrop"></p>
+                  <p>Total Due: ₹<span id="modalDueAmount"></span></p>
+                  <input type="number" id="paymentAmount" placeholder="Enter amount to pay" min="1" />
+                  <button type="submit" id="confirmPayment">Confirm Payment</button>
+                  <button type="button" id="cancelPaymentBtn">Cancel Payment</button>
+              </form>
+          </div>
+      </div>
+
+    <script src="../../js/payment.js"></script>
+  </div>
+</body>
+</html>

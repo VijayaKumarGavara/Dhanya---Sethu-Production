@@ -70,11 +70,17 @@
           tbody.innerHTML = `<tr><td colspan="5">No purchase records found.</td></tr>`;
           return;
         }
-
+        function formatDate(isoString) {
+          const date = new Date(isoString);
+          const day = String(date.getDate()).padStart(2, "0");
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const year = date.getFullYear();
+          return `${day}/${month}/${year}`;
+        }
         records.forEach(record => {
           const row = document.createElement("tr");
 
-          const date = new Date(record.date).toLocaleDateString();
+          const date = formatDate(record.date); // Date(record.date).toLocaleDateString();
           const farmer=record.farmer_name;
           const crop = record.crop_name;
           const quantity = record.quantity ?? "N/A";

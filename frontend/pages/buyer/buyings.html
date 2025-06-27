@@ -9,8 +9,8 @@
   <h1>Buyings Page</h1>
   <h2>Buyer Name: <span id="buyer-name"></span></h2>
     <div class="form-item">
-        <label for="farmer_aadhar">Aadhar No:</label>
-        <input type="text" name="farmer_aadhar" id="farmer_aadhar" required pattern="[0-9]{12}" maxlength="12" title="Enter 12-digit Aadhar number" />
+        <label for="farmer_aadhar_num">Aadhar No:</label>
+        <input type="text" name="farmer_aadhar_num" id="farmer_aadhar_num" required pattern="[0-9]{12}" maxlength="12" title="Enter 12-digit Aadhar number" value="543210987646"/>
     </div>
     <button onclick="getFarmerDetails()">Get Farmer Details</button>
 
@@ -40,8 +40,34 @@
 
         <button onclick="submitProcurement()">Submit Procurement</button>
     </div>
-
-  <button onclick="logout()">Logout</button>
+    <div id="register_farmer_section" >
+        <button id="show_farmer_form_btn" style="display: none;">Register New Farmer</button>
+        <!-- Farmer Registration Form -->
+        <form action="/api/farmer/register" method="post" id="farmer-registration" enctype="multipart/form-data" style="display: none; margin-top: 20px;">
+          <div class="form-heading">Farmer Registration Form</div>
+          <div class="form-item">
+            <label for="farmer_photo">Profile Picture</label>
+            <input type="file" accept="image/*" name="farmer_photo" id="farmer_photo" required />
+          </div>
+          <div class="form-item">
+            <label for="farmer_name">Name:</label>
+            <input type="text" name="name" id="farmer_name" required minlength="3" maxlength="50" value="Chandaka Papi Naidu" />
+          </div>
+          <div class="form-item">
+            <label for="farmer_phone">Phone No:</label>
+            <input type="tel" name="phone" id="farmer_phone" required pattern="[0-9]{10}" maxlength="10" title="Enter 10-digit phone number" value="7893996863"/>
+          </div>
+          <div class="form-item">
+            <label for="farmer_aadhar">Aadhar No:</label>
+            <input type="text" name="aadhar" id="farmer_aadhar" required pattern="[0-9]{12}" maxlength="12" title="Enter 12-digit Aadhar number" value="664905376693"/>
+          </div>
+          <div class="form-item">
+            <label for="farmer_village">Village:</label>
+            <input type="text" name="village" id="farmer_village" required maxlength="100" value="Routhupeta"/>
+          </div>
+          <button type="submit">Register</button>
+        </form>
+    </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -51,7 +77,7 @@
     });
 
     async function getFarmerDetails() {
-      const aadhar = document.getElementById("farmer_aadhar").value.trim();
+      const aadhar = document.getElementById("farmer_aadhar_num").value.trim();
       const outputDiv = document.getElementById("farmer_details");
 
       if (!/^\d{12}$/.test(aadhar)) {
@@ -60,11 +86,22 @@
       }
 
       try {
-        const response = await fetch(`/api/farmer/by-aadhar/${aadhar}`);
+        const response = await fetch(`/api/buyer/farmer/by-aadhar/${aadhar}`);
         const data = await response.json();
         
+        // if (!response.ok) {
+        //   outputDiv.innerHTML = `<p style="color: red;">${data.error || 'Farmer not found'}</p>`;
+        //   return;
+        // }
+        //console.log(response.status);
         if (!response.ok) {
-          outputDiv.innerHTML = `<p style="color: red;">${data.error || 'Farmer not found'}</p>`;
+          if (response.status === 404) {
+            // document.getElementById('farmer-registration').style.display = 'block';
+            document.getElementById('show_farmer_form_btn').style.display = 'block';
+            outputDiv.innerHTML = `<p style="color: red;" id="farmer_status">Farmer not found.</p>`;
+          } else {
+            outputDiv.innerHTML = `<p style="color: red;">${data.error || 'Error occurred'}</p>`;
+          }
           return;
         }
         const farmer = Array.isArray(data) ? data[0] : data;
@@ -75,18 +112,48 @@
           <p><strong>Name:</strong> ${farmer.farmer_name}</p>
           <p><strong>Phone:</strong> ${farmer.farmer_phone_num}</p>
           <p><strong>Village:</strong> ${farmer.farmer_village}</p>
-          <img src="/uploads/farmers/${farmer.photo}" alt="Farmer Photo" width="150"/>
+          <img src="https://res.cloudinary.com/dicmdo152/image/upload/farmers/${farmer.photo}" alt="Farmer Photo" width="150" />
         `;
         // Show confirm button only after successful fetch
         document.getElementById("confirm_farmer_btn").dataset.farmerId = farmer.farmer_id;
         document.getElementById("confirm_farmer_btn").style.display = "inline-block";
-
-        
       } catch (err) {
         console.error("Error fetching farmer:", err);
         outputDiv.innerHTML = "<p style='color:red;'>Something went wrong. Try again.</p>";
       }
     }
+    document.getElementById('show_farmer_form_btn').addEventListener('click', () => {
+      document.getElementById('farmer-registration').style.display = 'block';
+      document.getElementById('show_farmer_form_btn').style.display = 'none';
+      document.getElementById('farmer_status').style.display='none';
+      document.getElementById('farmer_aadhar').value=document.getElementById('farmer_aadhar_num').value;  
+    });
+    // Farmer form submission handling
+    document.getElementById('farmer-registration').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const form = e.target;
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('/api/farmer/register', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          const error = await response.json();
+          alert('Registration failed: ' + (error.message || 'Unknown error'));
+          return;
+        }
+        document.getElementById('register_farmer_section').style.display = 'none';
+        document.getElementById('farmer_aadhar_num').value=document.getElementById('farmer_aadhar').value;  
+      } catch (err) {
+        console.error('Error submitting form:', err);
+        alert('Something went wrong during registration.');
+      }
+    });
+    
     function confirmFarmer() {
       const farmerId = document.getElementById("confirm_farmer_btn").dataset.farmerId;
       if (farmerId) {
@@ -164,13 +231,6 @@
         console.error("Submit error:", err);
         alert("An error occurred while submitting procurement.");
       }
-    }
-
-
-
-    function logout() {
-      localStorage.clear();
-      window.location.href = "/login";
     }
   </script>
 </body>

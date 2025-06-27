@@ -43,13 +43,14 @@ exports.registerBuyer = async (req, res) => {
     };
 
     await Buyer.registerBuyer(newBuyer);
-    // const cropSettings = await Buyer.getCropSettingsByBuyerId(buyer.buyer_id); // You'll define this model
+    await Buyer.setCropSettings(buyer_id);
+    const cropSettings = await Buyer.getCropSettingsByBuyerId(buyer_id); // You'll define this model
     
     res.status(200).json({
       message: 'Registration successful',
       // buyer_name: newBuyer.buyer_name
-      newBuyer
-      // crop_settings:cropSettings
+      buyer:newBuyer,
+      crop_settings:cropSettings
     });
 
   } catch (err) {
