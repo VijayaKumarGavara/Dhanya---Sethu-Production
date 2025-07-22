@@ -1,63 +1,65 @@
-const WEATHER_API_KEY = "6523e19a05e54c6d97334330251706";
+const API_KEY = 'sk-live-kpc2Z2ZdOSuofE7oStLIiwlkc56ecmMJ3id0wH9c';
 
-// Function to fetch weather data from WeatherAPI
-async function fetchWeather(lat, lon) {
-  const url = `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${lat},${lon}&aqi=no`;
-
+async function getWeather(lat, lon) {
   try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("API Error");
-    const data = await response.json();
-    displayWeather(data);
-  } catch (error) {
-    console.error("Failed to fetch weather:", error);
-    document.getElementById("weatherContainer").innerHTML = `<p style="color:red">Weather data unavailable.</p>`;
+    const res = await fetch(`https://weather.indianapi.in/global/current?location=${lat},${lon}`, {
+      headers: {
+        'x-api-key': API_KEY
+      }
+    });
+
+    const data = await res.json();
+    console.log("Weather API Response:", data);
+
+    if (!res.ok || typeof data.temperature === 'undefined') {
+      throw new Error(data?.error || 'Invalid weather response');
+    }
+
+    // Render to DOM
+    const container = document.getElementById('weather-info') || document.body;
+    container.innerHTML = `
+      <h2>🌤️ Weather Report</h2>
+      <p><strong>Condition:</strong> ${data.condition}</p>
+      <p><strong>Temperature:</strong> ${data.temperature}°C (Feels like ${data.feels_like}°C)</p>
+      <p><strong>Humidity:</strong> ${data.humidity}%</p>
+      <p><strong>Wind:</strong> ${data.wind_speed} km/h from ${data.wind_direction}</p>
+      <p><strong>UV Index:</strong> ${data.uv_index}</p>
+    `;
+  } catch (err) {
+    console.error("Weather error:", err);
+    document.body.innerHTML += `<p style="color:red;">⚠️ Failed to fetch weather: ${err.message}</p>`;
   }
 }
 
-// Function to display the weather on the page
-function displayWeather(data) {
-  const weatherContainer = document.getElementById("weatherContainer");
-  const { name, region, country, lat, lon } = data.location;
-  const { temp_c, condition, wind_kph, humidity, feelslike_c } = data.current;
+async function init() {
+  let lat = localStorage.getItem('lat');
+  let lon = localStorage.getItem('lon');
 
-  weatherContainer.innerHTML = `
-    <h2>🌦️ Weather Updates</h2>
-    <p><strong>Location:</strong> ${name}, ${region}, ${country}</p>
-    <p><strong>Temperature:</strong> ${temp_c}°C (Feels like: ${feelslike_c}°C)</p>
-    <p><strong>Condition:</strong> ${condition.text}</p>
-    <img src="${condition.icon}" alt="Weather Icon" />
-    <p><strong>Wind:</strong> ${wind_kph} kph</p>
-    <p><strong>Humidity:</strong> ${humidity}%</p>
-    <p><strong>Latitude:</strong> ${lat}, <strong>Longitude:</strong> ${lon}</p>
-  `;
-}
+  if (!lat || !lon) {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
 
-// Check localStorage for stored coordinates
-const storedLocation = JSON.parse(localStorage.getItem("farmer_location"));
-
-if (storedLocation) {
-  fetchWeather(storedLocation.lat, storedLocation.lon);
-} else {
-  // Ask for browser geolocation if not stored
-  if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const coords = {
-          lat: position.coords.latitude,
-          lon: position.coords.longitude,
-        };
-        localStorage.setItem("farmer_location", JSON.stringify(coords));
-        fetchWeather(coords.lat, coords.lon);
+        lat = position.coords.latitude;
+        lon = position.coords.longitude;
+
+        // Save to localStorage
+        localStorage.setItem('lat', lat);
+        localStorage.setItem('lon', lon);
+
+        getWeather(lat, lon);
       },
-      (error) => {
-        console.error("Location access denied:", error);
-        document.getElementById("weatherContainer").innerHTML =
-          "<p>Please enable location services to view weather updates.</p>";
+      (err) => {
+        console.error("Geolocation error:", err);
+        alert("Location permission denied. Weather data cannot be loaded.");
       }
     );
   } else {
-    document.getElementById("weatherContainer").innerHTML =
-      "<p>Geolocation is not supported by your browser.</p>";
+    getWeather(lat, lon);
   }
 }
+
+document.addEventListener("DOMContentLoaded", init);

@@ -4,13 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buyings Page</title>
+  <link rel="shortcut icon" href="../../assets/AGC.png" type="image/png"> 
+
 </head>
 <body>
   <h1>Buyings Page</h1>
   <h2>Buyer Name: <span id="buyer-name"></span></h2>
     <div class="form-item">
         <label for="farmer_aadhar_num">Aadhar No:</label>
-        <input type="text" name="farmer_aadhar_num" id="farmer_aadhar_num" required pattern="[0-9]{12}" maxlength="12" title="Enter 12-digit Aadhar number" value="543210987646"/>
+        <input type="text" name="farmer_aadhar_num" id="farmer_aadhar_num" required pattern="[0-9]{12}" maxlength="12" title="Enter 12-digit Aadhar number"/>
     </div>
     <button onclick="getFarmerDetails()">Get Farmer Details</button>
 
@@ -51,19 +53,19 @@
           </div>
           <div class="form-item">
             <label for="farmer_name">Name:</label>
-            <input type="text" name="name" id="farmer_name" required minlength="3" maxlength="50" value="Chandaka Papi Naidu" />
+            <input type="text" name="name" id="farmer_name" required minlength="3" maxlength="50" />
           </div>
           <div class="form-item">
             <label for="farmer_phone">Phone No:</label>
-            <input type="tel" name="phone" id="farmer_phone" required pattern="[0-9]{10}" maxlength="10" title="Enter 10-digit phone number" value="7893996863"/>
+            <input type="tel" name="phone" id="farmer_phone" required pattern="[0-9]{10}" maxlength="10" title="Enter 10-digit phone number" />
           </div>
           <div class="form-item">
             <label for="farmer_aadhar">Aadhar No:</label>
-            <input type="text" name="aadhar" id="farmer_aadhar" required pattern="[0-9]{12}" maxlength="12" title="Enter 12-digit Aadhar number" value="664905376693"/>
+            <input type="text" name="aadhar" id="farmer_aadhar" required pattern="[0-9]{12}" maxlength="12" title="Enter 12-digit Aadhar number" />
           </div>
           <div class="form-item">
             <label for="farmer_village">Village:</label>
-            <input type="text" name="village" id="farmer_village" required maxlength="100" value="Routhupeta"/>
+            <input type="text" name="village" id="farmer_village" required maxlength="100" />
           </div>
           <button type="submit">Register</button>
         </form>

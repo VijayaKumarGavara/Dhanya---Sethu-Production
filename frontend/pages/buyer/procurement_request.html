@@ -4,10 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Finalize Procurements</title>
+  <link rel="shortcut icon" href="../../assets/AGC.png" type="image/png"> 
+
 </head>
 <body>
   <h2>💰 Finalize Procurements</h2>
-  <table border="1" cellspacing="0" cellpadding="8" style="width: 100%;">
+  <table border="1" cellspacing="0" cellpadding="8" style="width: 100%; text-align: center;">
     <thead>
       <tr>
         <th>Date</th>
@@ -45,7 +47,7 @@
         const inputId = `cost-${entry.request_id}`;
 
         tr.innerHTML = `
-          <td>${entry.created_at}</td>
+          <td>${formatDate(entry.created_at)}</td>
           <td>${entry.farmer_name}</td>
           <td>${entry.crop_name}</td>
           <td>${quantity}</td>

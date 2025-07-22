@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Procurement Requests</title>
+  <link rel="shortcut icon" href="../../assets/AGC.png" type="image/png"> 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    .crop-section {
+      margin-bottom: 40px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    .buyer-section {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px dashed #aaa;
+      border-radius: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 8px 12px;
+      border: 1px solid #bbb;
+      text-align: center;
+    }
+    th {
+      background-color: #f3f3f3;
+    }
+    .status-pending {
+      color: red;
+      font-weight: bold;
+    }
+    .status-added {
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pending Procurement Requests</h1>
+  <div id="requests-container"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const farmer = JSON.parse(localStorage.getItem('farmer'));
+      if (!farmer) {
+        alert('Please log in first.');
+        window.location.href = '/login';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/farmer/procurement-requests?farmer_id=${farmer.farmer_id}`);
+        const result = await response.json();
+
+        if (!response.ok) {
+          alert(result.error || 'Failed to fetch requests.');
+          return;
+        }
+
+        const data = result.requests || result;
+
+        if (!Array.isArray(data) || data.length === 0) {
+          document.getElementById('requests-container').innerHTML = '<p>No procurement requests found.</p>';
+          return;
+        }
+
+        const grouped = {};
+        data.forEach(req => {
+          const cropKey = req.crop_name;
+          if (!grouped[cropKey]) grouped[cropKey] = {};
+
+          const buyerKey = `${req.buyer_name}-${req.buyer_id}`;
+          if (!grouped[cropKey][buyerKey]) grouped[cropKey][buyerKey] = [];
+          
+          grouped[cropKey][buyerKey].push(req);
+        });
+
+        const container = document.getElementById('requests-container');
+
+        for (const cropName in grouped) {
+          const cropSection = document.createElement('div');
+          cropSection.className = 'crop-section';
+          cropSection.innerHTML = `<h2>Crop: ${cropName}</h2>`;
+
+          const buyers = grouped[cropName];
+          for (const buyerKey in buyers) {
+            const [buyerName] = buyerKey.split('-');
+            const buyerDiv = document.createElement('div');
+            buyerDiv.className = 'buyer-section';
+
+            const heading = document.createElement('h3');
+            heading.textContent = `Buyer: ${buyerName}`;
+            buyerDiv.appendChild(heading);
+
+            const table = document.createElement('table');
+            table.innerHTML = `
+              <tr>
+                <th>Date</th>
+                <th>Quantity</th>
+                <th>Status</th>
+              </tr>
+            `;
+
+            buyers[buyerKey].forEach(req => {
+              const tr = document.createElement('tr');
+              const formattedDate = new Date(req.created_at).toLocaleDateString('en-IN');
+              const statusClass = req.status === 'approved' ? 'status-added' : 'status-pending';
+              const statusText = req.status === 'approved' ? 'Cost Added' : 'Pending';
+
+              tr.innerHTML = `
+                <td>${formattedDate}</td>
+                <td>${req.quantity} ${req.unit_type}</td>
+                <td class="${statusClass}">${statusText}</td>
+              `;
+              table.appendChild(tr);
+            });
+
+            buyerDiv.appendChild(table);
+            cropSection.appendChild(buyerDiv);
+          }
+
+          container.appendChild(cropSection);
+        }
+      } catch (err) {
+        console.error('Fetch error:', err);
+        alert('Something went wrong. Please try again.');
+      }
+    });
+  </script>
+</body>
+</html>

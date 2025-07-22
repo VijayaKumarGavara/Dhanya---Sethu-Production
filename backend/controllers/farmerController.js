@@ -256,3 +256,19 @@ exports.getSellingRecordsNew = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch the selling records" });
   }
 };
+
+exports.getProcurementRequests = async (req, res) => {
+  const { farmer_id } = req.query;
+
+  if (!farmer_id) {
+    return res.status(400).json({ error: 'Farmer ID is required' });
+  }
+
+  try {
+    const requests = await Farmer.getProcurementRequestsByFarmer(farmer_id);
+    res.json({ requests });
+  } catch (err) {
+    console.error('Error fetching procurement requests:', err);
+    res.status(500).json({ error: 'Failed to fetch procurement requests' });
+  }
+};
