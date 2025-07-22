@@ -202,3 +202,20 @@ exports.getSellingRecordsByFarmerNew = async (farmer_id) => {
   const [results] = await db.query(sql, [farmer_id]);
   return results;
 };
+
+exports.getProcurementRequestsByFarmer = async (farmer_id) => {
+  const [rows] = await db.execute(
+    `SELECT 
+      pr.quantity, pr.unit_type, pr.status, pr.created_at,
+      c.crop_name,
+      b.buyer_name, b.buyer_id
+     FROM procurement_requests pr
+     JOIN crops c ON pr.crop_id = c.crop_id
+     JOIN buyers b ON pr.buyer_id = b.buyer_id
+     WHERE pr.farmer_id = ?
+     ORDER BY pr.created_at DESC`,
+    [farmer_id]
+  );
+
+  return rows;
+};

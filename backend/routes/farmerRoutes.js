@@ -21,7 +21,7 @@ router.post('/login', farmerController.loginFarmer);
 // Selling records route (NEW)
 router.get('/selling-records', farmerController.getSellingRecords);
 router.get('/selling-records-new', farmerController.getSellingRecordsNew);
-
+router.get('/procurement-requests', farmerController.getProcurementRequests);
 // GET farmer by Aadhar number
 // router.get('/by-aadhar/:aadhar', async (req, res) => {
 //   const { aadhar } = req.params;

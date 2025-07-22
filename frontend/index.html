@@ -1,41 +1,394 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dhanya - Sethu</title> 
-    <link rel="shortcut icon" href="./assets/AGC.png" type="image/png"> 
-    <style>
-        
-    </style>
-</head>
-<body>
-    <header>
-        <div class="logo">Dhanya - Sethu</div>
-        <nav>
-            <ul>
-                <li><a href="#user_manual">User Manual</a></li>
-                <li><a href="/login">Login</a></li>
-                <li><a href="./register">Registeration</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#contact-form">Contact Us</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <div id="user_manual">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quas fuga pariatur dignissimos sunt placeat, molestias dolorum soluta ad optio? Deserunt aperiam perferendis facilis deleniti repellat. Rerum esse sit quibusdam quo!
-        </div>
-        <div id="services">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit, sapiente iste mollitia tenetur voluptate aliquid deleniti quam ipsam quasi veniam earum fugit exercitationem vel aliquam quibusdam, nulla dolor, illo modi!
-        </div>
-        <div id="pricing">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque soluta distinctio velit pariatur, natus ad expedita reiciendis ipsa at provident totam excepturi ea porro perspiciatis! Sint iste nulla dignissimos quas.
-        </div>
-        <div id="contact-form">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Distinctio incidunt reprehenderit amet odit consectetur impedit odio similique eius assumenda rerum, nihil quas tempore ducimus quae deleniti eligendi, magni expedita aperiam.
-        </div>
-    </main>
-</body>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="An Agri Procurement & Payments Tracking App">
+        <meta name="keywords" content="agriculture, farmer, crops, buyers, procurement, payments">
+        <meta name="author" content="Vijaya Kumar Gavara">
+        <meta name="viewport" content="width=device-width initial-scale=1.0">
+        <title>Dhanya - Sethu</title>
+        <link rel="shortcut icon" href="./assets/AGC.png" type="image/x-icon">
+        <!-- <link rel="stylesheet" href="responsive.css"> -->
+        <link rel="stylesheet" href="./css/s3.css">
+    </head>
+    <body>
+        <header>
+            <div class="logo_container">
+                <figure>
+                    <a href="/"><img class="logo" src="./assets/DS_new.png" alt="Dhanya Sethu Logo"></a>   
+                </figure>
+                <h1>Dhanya Sethu</h1>
+            </div>
+            <nav>
+                <ul class="list-container">
+                    <li><a href="#our-mission">Our Mission</a></li>
+                    <li><a href="#farmers">For Farmers</a></li>
+                    <li><a href="#buyers">For Buyers</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="/login" id="signin_btn">Sign In</a></li>
+                    <li><a href="/register" id="signup_btn">Get Started</a></li>
+                </ul>
+            </nav>
+            <button type="button" class="menu-btn">☰</button>
+        </header>
+        <main>
+            <section class="hero">
+                <div class="hero-content">
+                    <h1>Empowering Farmers, Simplifying Procurement</h1>
+                    <p>Dhanya Sethu bridges the gap between farmers and buyers with transparency, trust, and technology.</p>
+                    <a href="/register" class="cta_button">Get Started</a>
+                </div>
+            </section>
+            <section id="our-mission">
+                <div class="anchor-offset"></div>
+                <h2 class="section-heading">Our Mission</h2>
+                <p class="section-description">We're on a mission to make local crop procurement more transparent...</p>
+                <div class="mission-pillars">
+                <article class="mission-item">
+                    <div class="mission-heading-container">
+                        <img src="./assets/check-circle.svg" alt="Verified Records Icon" width="35" class="mission-item-icon">
+                        <h3>Procurement Records</h3>
+                    </div>
+                    <p>Farmers get clear, digital proof of every sale — crop, quantity, rate, and buyer. No confusion. No missing records.</p>
+                </article>
+
+                <article class="mission-item">
+                    <div class="mission-heading-container">
+                        <img src="./assets/payment.svg" alt="Payments Tracking Icon" width="35" class="mission-item-icon">
+                        <h3>Payments Tracking</h3>
+                    </div>
+                    <p>Track dues. Get updates. Stay confident. Farmers and buyers can easily stay on top of payments.</p>
+                </article>
+
+                <article class="mission-item">
+                    <div class="mission-heading-container">
+                        <img src="./assets/mobile.svg" alt="Smart Procurement Icon" width="35" class="mission-item-icon">
+                        <h3>Smart Procurement</h3>
+                    </div>
+                    <p>Smart Workflow for Buyers & Workers
+                    Find farmers, enter records, and manage costs — fast, clear, and guided.</p>
+                </article>
+
+                <article class="mission-item">
+                    <div class="mission-heading-container">
+                        <img src="./assets/settings.svg" alt="Standard Procurement Icon" width="35" class="mission-item-icon">
+                        <h3>Standardized Process </h3>
+                    </div>
+                    <p>Crop-wise settings and unit handling (kg/quintal) made simple and accurate — built for farmers and buyers alike.</p>
+                </article>
+                </div>
+            </section>
+
+            <section id="farmers">
+                <h2 class="section-heading">For Farmers</h2>
+                <p class="section-description">Built to Empower Every Farmer.</p>
+                <div class="people-container">
+                    <div class="people-image">
+                        <img src="./assets/AG_bg.jpg" alt="Farmer Benifits" srcset="" class="people-benifits-img">
+                    </div>
+                    <div class="people-points">
+                        
+                        <h3> Get Clear Sale Records</h3>
+                        <p>Every sale logged digitally — no more disputes.</p>
+
+                        <h3> Track Payments Easily</h3>
+                        <p>Know what you're owed, get updates instantly.</p>
+
+                        <h3> Sell with Confidence</h3>
+                        <p>A smooth, guided process — no confusion.</p>
+
+                        <h3> Support in Your Language</h3>
+                        <p>Simple interface with local language support.</p>
+
+                        <h3> Safe and Transparent Deals</h3>
+                        <p>Digital proof of quantity, buyer, and price.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="buyers">
+                <h2 class="section-heading">For Buyers</h2>
+                <p class="section-description">Designed to Simplify Every Procurement</p>
+
+                <div class="people-container">
+                    
+                    <div class="people-points">
+                        
+                        <h3> Team Management, Simplified</h3>
+                        <p>Add and manage workers across multiple centers seamlessly.</p>
+
+                        <h3> Clean Procurement Workflow</h3>
+                        <p>From farmer lookup to bag entry to cost approval — everything is guided.</p>
+
+                        <h3> Crop-wise Control</h3>
+                        <p>Set units (kg/quintal) and rates per crop — your system, your rules.</p>
+
+                        <h3> Payment Transparency</h3>
+                        <p>Track farmer dues, make payments easily, and maintain clear logs.</p>
+
+                    </div>
+                    <div class="people-image">
+                        <img src="./assets/AG_bg.jpg" alt="Farmer Benifits" srcset="" class="people-benifits-img">
+                    </div>
+                    
+                </div>
+            </section>
+
+            <section id="testimonials">
+                <h2 class="section-heading">Testimonials</h2>
+                <p class="section-description">Real Voices. Real Impact.</p>
+                <div class="reviews-wrapper">
+                    <div class="reviews-track">
+                        <article class="reviews">
+                            <span class="review">Dhanya Sethu made it easier than ever to source maize directly from farmers. Transparent records and quality tracking gave us full confidence.</span>                        
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                <img src="./assets/pspk.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Sathya Narayana, </span>
+                                        <span class="user-role">Buyer</span>
+                                    </div>
+                                    <div class="user-location">Srikakulam, Andhra Pradesh</div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="reviews">
+                            <div class="review">With this app, I know exactly how much I sold and to whom. It’s a big relief during busy harvest time.</div>
+                            
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                    <img src="./assets/FARM1601329452.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Laxman Rao, </span>
+                                        <span class="user-role">Farmer</span>
+                                    </div>
+                                    <div class="user-location">Srikakulam, Andhra Pradesh</div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="reviews">
+                            <span class="review">We handle huge volume purchases. The digital proof of procurement and farmer records saved us hours every week.</span>
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                <img src="./assets/GVK.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Manoj Reddy, </span>
+                                        <span class="user-role">Buyer</span>
+                                    </div>
+                                    <div class="user-location">Waranal, Telangana</div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="reviews">
+                            <span class="review">Our quality has gone up since using this platform. The interface is simple, and records are always available when I need them.</span>
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                <img src="./assets/pspk.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Naeevn, </span>
+                                        <span class="user-role">Buyer</span>
+                                    </div>
+                                    <div class="user-location">Palani, Tamilnadu</div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="reviews">
+                            <span class="review">As a startup, we needed reliable procurement at scale. The system helped us avoid overpaying and ensured on-time deliveries.</span>
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                    <img src="./assets/FARM1601329452.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Mohan Nayak, </span>
+                                        <span class="user-role">Buyer</span>
+                                    </div>
+                                    <div class="user-location">Karnool, Andhra Pradesh</div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="reviews">
+                            <span class="review">I feel more confident selling my crops now. The app keeps proof of every deal, so there are no arguments about quantity or price.</span>
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                <img src="./assets/GVK.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Thrinadha, </span>
+                                        <span class="user-role">Farmer</span>
+                                    </div>
+                                    <div class="user-location">Srikakulam, Andhra Pradesh</div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="reviews">
+                            <span class="review">Now I get correct payment records for each crop. No confusion!</span>
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                <img src="./assets/pspk.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Niranjan Reddy, </span>
+                                        <span class="user-role">Buyer</span>
+                                    </div>
+                                    <div class="user-location">Medak, Telangana</div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="reviews">
+                            <span class="review">Earlier, I had to keep paper slips for every sale. Now, everything is digital and safe. Even if I lose my phone, my records are still there.</span>
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                    <img src="./assets/FARM1601329452.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Ramesh Nair, </span>
+                                        <span class="user-role">Farmer</span>
+                                    </div>
+                                    <div class="user-location">Thrissur, Kerala</div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="reviews">
+                            <span class="review">Now I get correct payment records for each crop. No confusion!</span>
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                <img src="./assets/GVK.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Ritesh Gowda, </span>
+                                        <span class="user-role">Farmer</span>
+                                    </div>
+                                    <div class="user-location">Udupi, Karnataka</div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="reviews">
+                            <span class="review">I used to worry about missing records, but now every sale is saved on my phone. No more confusion at the end of the season!</span>
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                <img src="./assets/pspk.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Maicheal Raj, </span>
+                                        <span class="user-role">Farmer</span>
+                                    </div>
+                                    <div class="user-location">Coimbatore, Tamil Nadu</div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="reviews">
+                            <span class="review">Getting paid is much easier now. I can see what buyers owe me and when they paid, all in one place.</span>
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                    <img src="./assets/FARM1601329452.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Gurunath Sharma, </span>
+                                        <span class="user-role">Farmer</span>
+                                    </div>
+                                    <div class="user-location">Nagpur, Maharashtra</div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="reviews">
+                            <span class="review">Procurement with proof, farmer communication, and sample history – all in one place. It’s an industry-level upgrade.</span>
+                            <div class="address-container">
+                                <div class="user-image-container">
+                                <img src="./assets/GVK.jpg" alt="User Image" class="user-image" />
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-role">
+                                        <span class="user-name">Kiran, </span>
+                                        <span class="user-role">Buyer</span>
+                                    </div>
+                                    <div class="user-location">Srikakulam, Andhra Pradesh</div>
+                                </div>
+                            </div>
+                        </article>
+                        <!-- Copy more review cards like this -->
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <div class="upper">
+                <div class="heading">
+                    <div class="logo_container">
+                    <figure>
+                        <a href="/"><img class="logo" src="./assets/DS_new.png" alt="Dhanya Sethu Logo"></a>   
+                    </figure>
+                    <h1>Dhanya Sethu</h1>
+                </div>
+                </div>
+                <div class="quick-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#our-mission">Our Mission</a></li>
+                        <li><a href="#farmers">For Farmers</a></li>
+                        <li><a href="#buyers">For Buyers</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="/login" >Sign In</a></li>
+                        <li><a href="/register" >Get Started</a></li>
+                    </ul>
+                
+                </div>
+                <div class="contact-info">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li>Phone:<a href="tel:+91 6303479435">+91 6303479435</a></li>
+                        <li>Email:<a href="mailto:vijayakumargavara@gmail.com">vijayakumargavara@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr/>
+            <div class="lower">
+                © 2025 Dhanya Sethu. All rights reserved.
+            </div>
+        </footer>
+        <script>
+            
+            const track = document.querySelector('.reviews-track');
+            const reviews = document.querySelectorAll('.reviews');
+            const perSlide = 3;
+            const total = reviews.length;
+
+            let index = 0;
+            let direction = 1;
+
+            function slideReviews() {
+                const reviewWidth = reviews[0].offsetWidth + 20; // +gap
+                const maxIndex = total - perSlide;
+
+                if (index >= maxIndex) direction = -1;
+                if (index <= 0) direction = 1;
+
+                index += direction;
+
+                track.style.transform = `translateX(-${index * reviewWidth}px)`;
+            }
+
+            setInterval(slideReviews, 3000);
+
+            const btn=document.querySelector('button');
+            btn.addEventListener('click',()=>{
+            document.querySelector('.list-container').classList.toggle('show');
+            })
+
+        </script>
+    </body>
 </html>

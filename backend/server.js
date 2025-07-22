@@ -50,8 +50,8 @@ app.get('/farmer/profile', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/farmer/profile.html'));
 });
 
-app.get('/farmer/records', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/pages/farmer/records.html'));
+app.get('/farmer/procurement_requests', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/pages/farmer/farmer_procurement_requests.html'));
 });
 app.get('/farmer/updated_records', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/farmer/records2.html'));

@@ -1,25 +1,117 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <title>Weather Test</title>
+</head>
+<body>
+  <h2>Weather Test (IndianAPI)</h2>
+  <div id="weather"></div>
+
+  <script src="../../js/weather_updates.js"></script>
+
+</body>
+</html> -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Weather Updates</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papm5RZ9GnYeLRhdGhj67fMfqYVd5ac1R/0jXreU1C3lb/3D3FFxwAKh03kQF3t8scv3Q2CzOwJG0kERig1K1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .weather-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+    .day-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      width: 180px;
+      text-align: center;
+    }
+    .day-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #34495e;
+    }
+    .day-card p {
+      margin: 6px 0;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
-  <h1>🌾 Weather Updates</h1>
-  <div id="weatherContainer">
-    <!-- <h2 id="location"></h2>
-    <p id="temperature"></p>
-    <p id="condition"></p>
-    <p id="humidity"></p>
-    <p id="wind"></p> -->
-  </div>
-  <!-- <div id="villageInputSection" style="display:none;">
-    <p>Couldn't detect accurate location. Please enter your village:</p>
-    <input type="text" id="villageInput" placeholder="Enter village name" />
-    <button onclick="submitVillage()">Submit</button>
-  </div> -->
+  <h1>Weather Updates (Current + Next 7 Days)</h1>
+  <div id="weather-container" class="weather-container"></div>
 
-  <script src="../../js/weather_updates.js"></script>
+  <script>
+    async function getWeather(cityName) {
+      try {
+        const res = await fetch(`https://weather.indianapi.in/india/weather?city=${cityName}`, {
+          headers: {
+            'x-api-key': 'sk-live-kpc2Z2ZdOSuofE7oStLIiwlkc56ecmMJ3id0wH9c'
+          }
+        });
+        const data = await res.json();
+
+        if (!data || !data.forecast) throw new Error('Invalid API response');
+
+        const container = document.getElementById('weather-container');
+        container.innerHTML = '';
+
+        // Current day
+        const today = data.current;
+        const currentCard = document.createElement('div');
+        currentCard.className = 'day-card';
+        currentCard.innerHTML = `
+          <h3>Today</h3>
+          <p><strong>${today.condition}</strong></p>
+          <p>Temp: ${today.temperature}&#8451;</p>
+          <p>Humidity: ${today.humidity}%</p>
+          <p>Wind: ${today.wind_speed} km/h ${today.wind_direction}</p>
+        `;
+        container.appendChild(currentCard);
+
+        // Next 7 days
+        data.forecast.forEach(day => {
+          const card = document.createElement('div');
+          card.className = 'day-card';
+          card.innerHTML = `
+            <h3>${day.date}</h3>
+            <p><strong>${day.condition}</strong></p>
+            <p>Min: ${day.min_temperature}&#8451; / Max: ${day.max_temperature}&#8451;</p>
+            <p>Humidity: ${day.humidity}%</p>
+            <p>Wind: ${day.wind_speed} km/h</p>
+          `;
+          container.appendChild(card);
+        });
+
+      } catch (err) {
+        console.error('Weather error:', err);
+        alert('Failed to fetch weather data.');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Change this to village or city name from farmer profile
+      const cityName = 'Vizianagaram';
+      getWeather(cityName);
+    });
+  </script>
 </body>
 </html>
