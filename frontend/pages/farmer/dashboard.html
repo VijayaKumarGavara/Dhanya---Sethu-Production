@@ -6,19 +6,43 @@
     <title>Farmer - Dashboard</title>
     <link rel="shortcut icon" href="../../assets/AGC.png" type="image/png"> 
 
-    <style>
-        li{
-            list-style: none;
-            margin-top: 20px;
-            font-size: 30px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/farmer-styles/dashborad.css">
 </head>
 <body>
-    <h1>Welocme To Farmer Dashboard</h1>
-    <li><a href="/farmer/profile">👤 My Profile</a></li>
-    <li><a href="/farmer/procurement_requests">📥 Sale Requests</a></li>
-    <li><a href="/farmer/updated_records">📊 Sale Records</a></li>
-    <li><a href="/farmer/weather_updates">🌦️ Weather Info</a></li>
+    <header>
+        <h1>Dhanya Sethu -🌾Farmer Dashboard</h1>
+    </header>
+    <h2 id="farmer-name"></h2>
+    <section class="dashboard-grid">
+        <div class="dashboard-card">
+            <div class="icon">👤</div>
+            <a href="/farmer/profile">My Profile</a>
+        </div>
+        <div class="dashboard-card">
+            <div class="icon">📥</div>
+            <a href="/farmer/procurement_requests">Sale Requests</a>
+        </div>
+        <div class="dashboard-card">
+            <div class="icon">📊</div>
+            <a href="/farmer/updated_records">Sale Records</a>
+        </div>
+        <div class="dashboard-card">
+            <div class="icon">🌦️</div>
+            <a href="/farmer/weather_updates">Weather Info</a>
+        </div>
+
+    </section>
+    <section class="quick-insights-section">
+        <h2>📊 Quick Insights</h2>
+        <div class="insights-container">
+            <div class="insight-item">Total Earnings this Month: ₹4,000</div>
+            <div class="insight-item">Pending Sale Requests: 2</div>
+            <div class="insight-item">Weather Alert: Light Rain Expected Tomorrow 🌧️</div>
+        </div>
+    </section>
+    <script>
+        const farmer = JSON.parse(localStorage.getItem('farmer'));
+        document.getElementById("farmer-name").textContent = `Namaste🙏 ${farmer.farmer_name}` || "Unknown Farmer";
+    </script>
 </body>
 </html>

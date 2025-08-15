@@ -3,13 +3,17 @@
 <head>
   <title>Buyer Profile</title>
   <link rel="shortcut icon" href="../../assets/AGC.png" type="image/png"> 
-
+  <link rel="stylesheet" href="../../css/farmer-styles/profile.css">
 </head>
 <body>
-  <h1>Buyer Profile</h1>
-  <div id="profile"></div>
-  <button onclick="logout()">Logout</button>
+  <header>
+    <h1>🌾 Buyer Profile</h1>
+  </header>
 
+  <section class="profile-section">
+    <div class="profile-card" id="profile"></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </section>
 
   <script>
     const buyer = JSON.parse(localStorage.getItem('buyer'));
