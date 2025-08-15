@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Login - Dhanya Sethu</title>
     <link rel="shortcut icon" href="../assets/AGC.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/login-registration.css">
 </head>
 <body>
     <div class="login-form">
@@ -27,6 +28,7 @@
             <input type="text" name="phoneno" id="phoneno" required value="7661848182"/>
         </div>
         <button type="submit">Login</button>
+        <p>Don't have an account? <a href="/register">Register Now</a></p>
     </form>
 
     <form action="/api/buyer/login" method="post" id="buyer-login">
@@ -40,6 +42,7 @@
             <input type="text" name="otp" id="buyer_otp" value="123456"/>
         </div>
         <button type="submit">Login</button>
+        <p>Don't have an account? <a href="/register">Register Now</a></p>
     </form>
 
     <form action="/api/worker/login" method="post" id="worker-login">
@@ -58,8 +61,8 @@
             <input type="text" name="worker_buyer_otp" id="worker_buyer_otp" value="123456" />
         </div>
         <button type="submit">Login</button>
+        <p>Don't have an account? <a href="/register">Register Now</a></p>
     </form>
-
     <!-- <script>
         document.addEventListener('DOMContentLoaded', () => {
             const forms = {

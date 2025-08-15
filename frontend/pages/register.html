@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Registration - Dhanya Sethu</title>
   <link rel="shortcut icon" href="../assets/AGC.png" type="image/x-icon">
-  <style>
-    .form-item { margin-bottom: 10px; }
-    form { margin: 20px 0; padding: 10px; border: 1px solid #ccc; max-width: 500px; }
-    .form-heading { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
-  </style>
+  <link rel="stylesheet" href="../css/login-registration.css">
 </head>
 <body>
   <div class="registration-form">
@@ -45,6 +41,7 @@
       <input type="text" name="village" id="farmer_village" required maxlength="100" value="Routhupeta"/>
     </div>
     <button type="submit">Register</button>
+    <p>Have an account? <a href="/login">Log in</a></p>
   </form>
 
   <!-- Buyer Registration Form -->
@@ -63,6 +60,7 @@
       <input type="text" name="buyer_village" id="buyer_village" required maxlength="100" value="Nadimivalsasa"/>
     </div>
     <button type="submit">Register</button>
+    <p>Have an account? <a href="/login">Log in</a></p>
   </form>
 
   <!-- Worker Registration Form -->
@@ -89,8 +87,8 @@
       <input type="text" name="buyer_otp" id="buyer_otp" required pattern="\d{6}" maxlength="6" title="Enter the 6-digit OTP sent by buyer" value="123456"/>
     </div>
     <button type="submit">Register</button>
+    <p>Have an account? <a href="/login">Log in</a></p>
   </form>
-
   <!-- <script>
     document.addEventListener('DOMContentLoaded', () => {
       const forms = {
