@@ -5,26 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buyer - Dashboard</title>
     <link rel="shortcut icon" href="../../assets/AGC.png" type="image/png">     
-    <style>
-        li{
-            margin-top: 20px;
-            font-size: 30px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/farmer-styles/dashborad.css">
 </head>
 <body>
-    <h1>Welcome To Buyer's Dashboard</h1>
+    <header>
+        <h1>Dhanya Sethu -🌾Buyer Dashboard</h1>
+    </header>
     <h2 id="buyer-name"></h2>
-    <li><a href="/buyer/profile">Profile</a></li>
-    <li><a href="/buyer/crop_settings">Edit Crop Settings</a></li>
-    <li><a href="/buyer/buyings">Buyings</a></li>
-    <li><a href="/buyer/procurements">Procurements Requests</a></li>
-    <li><a href="/buyer/records">Records</a></li>
-    <li><a href="/buyer/payment_dues">Payments</a></li>
-    <li><a href="/buyer/transactions">Transactions</a></li>
+
+    <section class="dashboard-grid">
+        <div class="dashboard-card">
+            <div class="icon">👤</div>
+            <a href="/buyer/profile">My Profile</a>
+        </div>
+        <div class="dashboard-card">
+            <div class="icon">⚙️</div>
+            <a href="/buyer/crop_settings">Edit Crop Settings</a>
+        </div>
+        <div class="dashboard-card">
+            <div class="icon">🛍️</div>
+            <a href="/buyer/buyings">Buyings</a>
+        </div>
+        <div class="dashboard-card">
+            <div class="icon">⏳</div>
+            <a href="/buyer/procurements">Procurements Requests</a>
+        </div>
+        <div class="dashboard-card">
+            <div class="icon">📄</div>
+            <a href="/buyer/records">Purchase Records</a>
+        </div>
+        <div class="dashboard-card">
+            <div class="icon">💵</div>
+            <a href="/buyer/payment_dues">Payments</a>
+        </div>
+        <div class="dashboard-card">
+            <div class="icon">🔄</div>
+            <a href="/buyer/transactions">Transactions</a>
+        </div>
+    </section>
+    <section class="quick-insights-section">
+        <h2>📊 Quick Insights</h2>
+        <div class="insights-container">
+            <div class="insight-item">Total Earnings this Month: ₹4,000</div>
+            <div class="insight-item">Pending Sale Requests: 2</div>
+            <div class="insight-item">Weather Alert: Light Rain Expected Tomorrow 🌧️</div>
+        </div>
+    </section>
     <script>
         const buyer = JSON.parse(localStorage.getItem('buyer'));
-        document.getElementById("buyer-name").textContent = buyer.buyer_name || "Unknown Buyer";
+        document.getElementById("buyer-name").textContent = `Namaste🙏 ${buyer.buyer_name}` || "Unknown Buyer";
     </script>
 </body>
 </html>
